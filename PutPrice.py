@@ -1,6 +1,6 @@
 import numpy as np
 
-class CallOption:
+class PutOption:
     def __init__(self, S0, r, u, d, K, T, n):
         self.S0 = S0 
         self.r = r
