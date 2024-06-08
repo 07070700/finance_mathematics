@@ -19,7 +19,7 @@ The code cover
 
 <!-- crl + alt = multi cusor -->
 >**$S_i$**: stock price at time i  
-**$r$** : Interest rate of a yea  r 
+**$r$** : Interest rate of a year 
 **$T$** : Maturity   
 **$n$** :  The number of interest payments per T  
 **$u$** :  up  
@@ -42,17 +42,31 @@ First, we calculate call and put option of contingent claim. Contingent claim is
 
 We want to know the value of contingent claim at time(t).
 
-**Call option**
+**Call option**  
 : long position
 
  $$V(T) = S(T)(\omega) - K$$
 
-$$V(t) = \tilde{p} V(t+1)(\omega_1) + \tilde{q}V(t+1)(\omega_2)$$
 
-
-**Put option**
+**Put option**  
 :short position
 
  $$V(T) = K- S(T)(\omega)$$
 
+
+
 $$V(t) = \tilde{p} V(t+1)(\omega_1) + \tilde{q}V(t+1)(\omega_2)$$
+
+
+m is the number of states at Maturity T
+
+$$V(0) = (\tilde{p} + \tilde{q})^T * 
+
+\begin{equation}
+   \begin{pmatrix} 
+   V_{T}(\omega_1)  \\
+   \vdots \\
+   V_{T}(\omega_{m-1})  \\
+   V_{T}(\omega_{m})  \\
+   \end{pmatrix} 
+\end{equation}$$
