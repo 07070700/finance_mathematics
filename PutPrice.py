@@ -47,5 +47,37 @@ class putOption:
                 Ap[j,i] = max(max(self.K-St[i,self.n],0), 1+(1+self.r*self.h)*(tilde_p*Ap[j,i+1]+ tilde_q*Ap[j+1,i+1]))
         
         return Ap
+
+    def statePrice(self,t):
+        n_t = self.T-t
+        
+        tilde_p = (1+self.r*self.h - self.d)/ (self.u - self.d)
+        tilde_q = 1-tilde_p
+        
+        discount = 1 / (1 + self.r) ** n_t
+        
+        coefs = []
+        for i in range(n_t + 1):
+            coef = (tilde_p ** (n_t - i)) * (tilde_q** i)  # 각 항의 계수 계산
+            coefs.append(coef)  # 리스트에 계수 추가
+        
+        coeff = np.array(coefs) * discount
+        
+        return coeff
+    
+    
+    def valueAt(self,t,option_type ='E'):
+        coef = self.statePrice(t)
+        
+        if option_type =='A':
+            VT = self.American()[:,-1]
+        
+        else:
+            VT = self.European()[:,-1]
+        
+        result = np.dot(coef,VT)
+        
+        return result
+        
                 
             

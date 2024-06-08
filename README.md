@@ -10,7 +10,10 @@ People use Derivatives to hedge a risk of our portpolio, increase leverage or sp
 
 In the documents, we calculate **the value and payoff of Call option and Put option among Derivative**.
 
-The code cover Multi-period,one- risky asset, binominal model (we assume omega(state space) has up and down only).
+The code cover 
+* Multi-period
+* one- risky asset
+* binominal model (we assume omega(state space) has up and down only).
 
 
 
@@ -26,10 +29,30 @@ The code cover Multi-period,one- risky asset, binominal model (we assume omega(s
 
 Using the information above, we can caculate **Risky Neutral Probobability**. 
 
-Risky neutral probability represents the probablity of potential future outcomes adjusted for risk.
+The Risky neutral probability is derived from the assumption that the value of option at maturity and the payoff of matured option are equal.
+
+Therefore, Risky neutral probability represents the probablity of potential future outcomes adjusted for risk.
+
 
 $$\tilde{p} = \frac{(1+r)-d}{u-d}$$
 $$\tilde{q} = \frac{u-(1+r)}{u-d}$$
 
-Call Option : 
+First, we calculate call and put option of contingent claim. Contingent claim is a no arbitrage derivative. 
 
+
+We want to know the value of contingent claim at time(t).
+
+**Call option**
+: long position
+
+ $$V(T) = S(T)(\omega) - K$$
+
+$$V(t) = \tilde{p} V(t+1)(\omega_1) + \tilde{q}V(t+1)(\omega_2)$$
+
+
+**Put option**
+:short position
+
+ $$V(T) = K- S(T)(\omega)$$
+
+$$V(t) = \tilde{p} V(t+1)(\omega_1) + \tilde{q}V(t+1)(\omega_2)$$

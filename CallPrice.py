@@ -11,7 +11,6 @@ class CallOption:
         self.K = K
         self.n = n
     
-    
     def S_tree(self):
         St = np.zeros((self.n+1,self.n+1))
         for i in range(self.n+1):
@@ -21,7 +20,7 @@ class CallOption:
     
     def European(self):
         St = self.S_tree()
-        tilde_p = (1+self.r*self.h - self.d)/ (self.u - self.d)
+        tilde_p = round((1+self.r*self.h - self.d)/ (self.u - self.d),2)
         tilde_q = 1-tilde_p
         
         Ep = np.zeros((self.n+1,self.n+1))
@@ -37,7 +36,7 @@ class CallOption:
         
     def American(self):
         St = self.S_tree()
-        tilde_p = (1+self.r*self.h - self.d)/ (self.u - self.d) #up
+        tilde_p = round((1+self.r*self.h - self.d)/ (self.u - self.d),2) #up
         tilde_q = 1-tilde_p #down
         
         Ap = np.zeros((self.n+1,self.n+1))
@@ -56,31 +55,27 @@ class CallOption:
         tilde_p = (1+self.r*self.h - self.d)/ (self.u - self.d)
         tilde_q = 1-tilde_p
         
-        coef = [1] # (p+q)**0
-        for i in range(1,n_t+1):
-            next_coef = [0] *(len(coef) + 1)
-            for j in range(len(coef)):
-                next_coef[j] += coef[j]*tilde_p
-                next_coef[j+1] += coef[j]*tilde_q
-            coef = next_coef 
+        discount = 1 / (1 + self.r) ** n_t
         
-        return np.array(coef)
+        coefs = []
+        for i in range(n_t + 1):
+            coef = (tilde_p ** (n_t - i)) * (tilde_q** i)  # 각 항의 계수 계산
+            coefs.append(coef)  # 리스트에 계수 추가
+        
+        coeff = np.array(coefs) * discount
     
-    def valueAt(self,t,option_type ='E'):
+        return coeff   
+    
+    def valueAt(self, t, option_type='E'):
         coef = self.statePrice(t)
         
-        if option_type =='A':
-            V_T = self.American()[:,-1]
-        
+        if option_type == 'A':
+            VT = self.American()[:, -1]
         else:
-            V_T = self.European()[:,-1]
+            VT = self.European()[:, -1]
         
-        result = np.dot(coef,V_T)
+        result = np.dot(coef, VT)
         
         return result
-        
-    
-    
-                
-        
+
         
