@@ -59,7 +59,9 @@ $$V(t) = \tilde{p} V(t+1)(\omega_1) + \tilde{q}V(t+1)(\omega_2)$$
 
 m is the number of states at Maturity T
 
-$$V(0) = (\tilde{p} + \tilde{q})^T 
+$$ 
+
+V(0) = (\tilde{p} + \tilde{q})^T 
 
    \begin{equation}
       \begin{pmatrix} 
@@ -69,8 +71,7 @@ $$V(0) = (\tilde{p} + \tilde{q})^T
       V_{T}(\omega_{m})  \\
       \end{pmatrix} 
    \end{equation}
-   
-   $$
+$$
 
 ## How to use
 
