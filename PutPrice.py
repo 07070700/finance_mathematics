@@ -1,6 +1,6 @@
 import numpy as np
 
-class putOption:
+class CallOption:
     def __init__(self, S0, r, u, d, K, T, n):
         self.S0 = S0 
         self.r = r
@@ -10,7 +10,7 @@ class putOption:
         self.T = T
         self.K = K
         self.n = n
-    
+
     
     def S_tree(self):
         St = np.zeros((self.n+1,self.n+1))
@@ -19,8 +19,9 @@ class putOption:
                 St[j,i] = self.S0*(self.u**(i-j))*(self.d**(j))
         return St
     
-    def European(self, St):
-        tilde_p = (1+self.r*self.h - self.d)/ (self.u - self.d)
+    def European(self):
+        St = self.S_tree()
+        tilde_p = round((1+self.r*self.h - self.d)/ (self.u - self.d),2)
         tilde_q = 1-tilde_p
         
         Ep = np.zeros((self.n+1,self.n+1))
@@ -34,9 +35,10 @@ class putOption:
         
         return Ep
         
-    def American(self, St):
-        tilde_p = (1+self.r*self.h - self.d)/ (self.u - self.d)
-        tilde_q = 1-tilde_p
+    def American(self):
+        St = self.S_tree()
+        tilde_p = round((1+self.r*self.h - self.d)/ (self.u - self.d),2) #up
+        tilde_q = 1-tilde_p #down
         
         Ap = np.zeros((self.n+1,self.n+1))
         for i in range(self.n+1):
@@ -47,37 +49,33 @@ class putOption:
                 Ap[j,i] = max(max(self.K-St[i,self.n],0), 1+(1+self.r*self.h)*(tilde_p*Ap[j,i+1]+ tilde_q*Ap[j+1,i+1]))
         
         return Ap
-
-    def statePrice(self,t):
-        n_t = self.T-t
+    
+    def statePrice(self):
         
         tilde_p = (1+self.r*self.h - self.d)/ (self.u - self.d)
         tilde_q = 1-tilde_p
         
-        discount = 1 / (1 + self.r) ** n_t
+        discount = 1 / (1 + self.r * self.h) ** self.n
         
         coefs = []
-        for i in range(n_t + 1):
-            coef = (tilde_p ** (n_t - i)) * (tilde_q** i)  # 각 항의 계수 계산
+        for i in range(self.n + 1):
+            coef = (tilde_p ** (self.n - i)) * (tilde_q** i)  # 각 항의 계수 계산
             coefs.append(coef)  # 리스트에 계수 추가
         
         coeff = np.array(coefs) * discount
-        
-        return coeff
     
+        return coeff   
     
-    def valueAt(self,t,option_type ='E'):
-        coef = self.statePrice(t)
+    def valueAt0(self,option_type='E'):
+        coeff = self.statePrice()
         
-        if option_type =='A':
-            VT = self.American()[:,-1]
-        
+        if option_type == 'A':
+            VT = self.American()[:, -1]
         else:
-            VT = self.European()[:,-1]
+            VT = self.European()[:, -1]
         
-        result = np.dot(coef,VT)
+        result = np.dot(coeff, VT)
         
         return result
+
         
-                
-            

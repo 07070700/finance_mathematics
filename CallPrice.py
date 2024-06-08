@@ -10,6 +10,7 @@ class CallOption:
         self.T = T
         self.K = K
         self.n = n
+
     
     def S_tree(self):
         St = np.zeros((self.n+1,self.n+1))
@@ -49,32 +50,31 @@ class CallOption:
         
         return Ap
     
-    def statePrice(self,t):
-        n_t = self.T-t
+    def statePrice(self):
         
         tilde_p = (1+self.r*self.h - self.d)/ (self.u - self.d)
         tilde_q = 1-tilde_p
         
-        discount = 1 / (1 + self.r) ** n_t
+        discount = 1 / (1 + self.r * self.h) ** self.n
         
         coefs = []
-        for i in range(n_t + 1):
-            coef = (tilde_p ** (n_t - i)) * (tilde_q** i)  # 각 항의 계수 계산
+        for i in range(self.n + 1):
+            coef = (tilde_p ** (self.n - i)) * (tilde_q** i)  # 각 항의 계수 계산
             coefs.append(coef)  # 리스트에 계수 추가
         
         coeff = np.array(coefs) * discount
     
         return coeff   
     
-    def valueAt(self, t, option_type='E'):
-        coef = self.statePrice(t)
+    def valueAt0(self,option_type='E'):
+        coeff = self.statePrice()
         
         if option_type == 'A':
             VT = self.American()[:, -1]
         else:
             VT = self.European()[:, -1]
         
-        result = np.dot(coef, VT)
+        result = np.dot(coeff, VT)
         
         return result
 
